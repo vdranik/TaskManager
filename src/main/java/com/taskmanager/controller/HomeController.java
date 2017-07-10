@@ -1,0 +1,60 @@
+package com.taskmanager.controller;
+
+import com.taskmanager.dao.DepartmentDao;
+import com.taskmanager.dao.EmployeeDao;
+import com.taskmanager.model.Department;
+import com.taskmanager.model.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Created by User on 7/7/2017.
+ */
+@Controller
+public class HomeController {
+
+    @Autowired
+    private EmployeeDao employeeDao;
+
+    @Autowired
+    private DepartmentDao departmentDao;
+
+    @RequestMapping("/")
+    public String home(){
+        return "home";
+    }
+
+    @RequestMapping("/employeeList")
+    public String getEmploees(Model model){
+        List<Employee> employeeList = employeeDao.getAllEmployees();
+        model.addAttribute("employeeList", employeeList);
+        return "employeeList";
+    }
+
+    @RequestMapping("/employeeList/viewEmployee/{employeeId}")
+    public String viewEmployee(@PathVariable int employeeId, Model model) throws IOException{
+        Employee employee = employeeDao.getEmployeeById(employeeId);
+        model.addAttribute("employee", employee);
+        return "viewEmployee";
+    }
+
+    @RequestMapping("/departmentList/viewDepartment/{departmentId}")
+    public String viewDepartment(@PathVariable int departmentId, Model model) throws IOException{
+        Department department = departmentDao.getDepartmentById(departmentId);
+        model.addAttribute("department", department);
+        return "viewDepartment";
+    }
+
+    @RequestMapping("/departmentList")
+    public String getDepartments(Model model){
+        List<Department> departmentList = departmentDao.getAllDepartments();
+        model.addAttribute("departmentList", departmentList);
+        return "departmentList";
+    }
+}
