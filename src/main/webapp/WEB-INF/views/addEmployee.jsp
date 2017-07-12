@@ -20,7 +20,8 @@
             <div class="form-group">
                <label for="department">Department: </label>
                 <c:forEach var="department" items="${departmentList}">
-                    <form:radiobutton path="department" id="department" value="${department}" label="${department.departmentName}" />
+                    <form:radiobutton path="department.departmentId" id="department" value="${department.departmentId}" label="${department.departmentName}" required="required"/>
+                    <form:errors path="department" cssStyle="color:#ff0000;" />
                 </c:forEach>
             </div>
 

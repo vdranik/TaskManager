@@ -1,9 +1,10 @@
 package com.taskmanager.controller;
 
 import com.taskmanager.dao.DepartmentDao;
-import com.taskmanager.dao.EmployeeDao;
 import com.taskmanager.model.Department;
 import com.taskmanager.model.Employee;
+import com.taskmanager.service.DepartmentService;
+import com.taskmanager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,10 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @Autowired
-    private DepartmentDao departmentDao;
+    private DepartmentService departmentService;
 
     @RequestMapping("/")
     public String home(){
@@ -32,28 +33,28 @@ public class HomeController {
 
     @RequestMapping("/employeeList")
     public String getEmploees(Model model){
-        List<Employee> employeeList = employeeDao.getAllEmployees();
+        List<Employee> employeeList = employeeService.getAllEmployees();
         model.addAttribute("employeeList", employeeList);
         return "employeeList";
     }
 
     @RequestMapping("/employeeList/viewEmployee/{employeeId}")
     public String viewEmployee(@PathVariable int employeeId, Model model) throws IOException{
-        Employee employee = employeeDao.getEmployeeById(employeeId);
+        Employee employee = employeeService.getEmployeeById(employeeId);
         model.addAttribute("employee", employee);
         return "viewEmployee";
     }
 
     @RequestMapping("/departmentList/viewDepartment/{departmentId}")
     public String viewDepartment(@PathVariable int departmentId, Model model) throws IOException{
-        Department department = departmentDao.getDepartmentById(departmentId);
+        Department department = departmentService.getDepartmentById(departmentId);
         model.addAttribute("department", department);
         return "viewDepartment";
     }
 
     @RequestMapping("/departmentList")
     public String getDepartments(Model model){
-        List<Department> departmentList = departmentDao.getAllDepartments();
+        List<Department> departmentList = departmentService.getAllDepartments();
         model.addAttribute("departmentList", departmentList);
         return "departmentList";
     }

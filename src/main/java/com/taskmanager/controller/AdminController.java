@@ -1,9 +1,9 @@
 package com.taskmanager.controller;
 
-import com.taskmanager.dao.DepartmentDao;
-import com.taskmanager.dao.EmployeeDao;
 import com.taskmanager.model.Department;
 import com.taskmanager.model.Employee;
+import com.taskmanager.service.DepartmentService;
+import com.taskmanager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,10 +31,10 @@ public class AdminController {
     private Path path;
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @Autowired
-    private DepartmentDao departmentDao;
+    private DepartmentService departmentService;
 
     @RequestMapping("/admin")
     public String adminPage(){
@@ -43,7 +43,7 @@ public class AdminController {
 
     @RequestMapping("/admin/employeeBase")
     public String employeeBase(Model model){
-        List<Employee> employees = employeeDao.getAllEmployees();
+        List<Employee> employees = employeeService.getAllEmployees();
         model.addAttribute("employees", employees);
 
         return "employeeBase";
@@ -52,7 +52,9 @@ public class AdminController {
     @RequestMapping("/admin/employeeBase/addEmployee")
     public String addEmployee(Model model){
         Employee employee = new Employee();
-        List<Department> departmentList = departmentDao.getAllDepartments();
+        List<Department> departmentList = departmentService.getAllDepartments();
+        Department department = new Department();
+        employee.setDepartment(department);
         model.addAttribute("employee", employee);
         model.addAttribute("departmentList", departmentList);
 
@@ -63,6 +65,8 @@ public class AdminController {
     public String addEmployeePost(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model, HttpServletRequest request){
 
         if(result.hasErrors()){
+            List<Department> departmentList = departmentService.getAllDepartments();
+            model.addAttribute("departmentList", departmentList);
             return "addEmployee";
         }
 
@@ -79,8 +83,7 @@ public class AdminController {
             }
         }
 
-
-        employeeDao.addEmployee(employee);
+        employeeService.addEmployee(employee);
 
         return "redirect:/admin/employeeBase";
     }
@@ -98,7 +101,7 @@ public class AdminController {
             }
         }
 
-        employeeDao.deleteEmployee(employeeId);
+        employeeService.deleteEmployee(employeeId);
 
         return "redirect:/admin/employeeBase";
     }
@@ -106,7 +109,7 @@ public class AdminController {
 
     @RequestMapping("/admin/employeeBase/editEmployee/{employeeId}")
     public String editEmployee(@PathVariable("employeeId") int employeeId, Model model){
-        Employee employee = employeeDao.getEmployeeById(employeeId);
+        Employee employee = employeeService.getEmployeeById(employeeId);
         model.addAttribute(employee);
 
         return "editEmployee";
@@ -132,7 +135,7 @@ public class AdminController {
             }
         }
 
-        employeeDao.editEmployee(employee);
+        employeeService.editEmployee(employee);
 
         return "redirect:/admin/employeeBase";
     }
@@ -141,7 +144,7 @@ public class AdminController {
 
     @RequestMapping("/admin/departmentBase")
     public String departmentBase(Model model){
-        List<Department> departments = departmentDao.getAllDepartments();
+        List<Department> departments = departmentService.getAllDepartments();
         model.addAttribute("departments", departments);
 
         return "departmentBase";
@@ -150,8 +153,6 @@ public class AdminController {
     @RequestMapping("/admin/departmentBase/addDepartment")
     public String addDepartment(Model model){
         Department department = new Department();
-        department.setDepartmentName("Department");
-        department.setDepartmentDescription("Department desc");
 
         model.addAttribute("department", department);
 
@@ -165,41 +166,14 @@ public class AdminController {
             return "addDepartment";
         }
 
-//        MultipartFile employeeImage = employee.getEmployeeImage();
-//        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-//        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
-//
-//        if(employeeImage != null && !employeeImage.isEmpty()){
-//            try {
-//                employeeImage.transferTo(new File(path.toString()));
-//            } catch (Exception ex){
-//                ex.printStackTrace();
-//                throw new RuntimeException("Employee image saving failed", ex);
-//            }
-//        }
-
-        departmentDao.addDepartment(department);
+        departmentService.addDepartment(department);
 
         return "redirect:/admin/departmentBase";
     }
 
     @RequestMapping("/admin/departmentBase/deleteDepartment/{departmentId}")
     public String deleteDepartment(@PathVariable int departmentId, Model model, HttpServletRequest request) {
-
-//        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-//        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employeeId + ".png");
-//
-//        if(Files.exists(path)){
-//            try {
-//                Files.delete(path);
-//            } catch (Exception ex){
-//                ex.printStackTrace();
-//            }
-//        }
-//
-//        employeeDao.deleteEmployee(employeeId);
-
-        departmentDao.deleteDepartment(departmentId);
+        departmentService.deleteDepartment(departmentId);
 
         return "redirect:/admin/departmentBase";
     }
@@ -207,7 +181,7 @@ public class AdminController {
 
     @RequestMapping("/admin/departmentBase/editDepartment/{departmentId}")
     public String editDepartment(@PathVariable("departmentId") int departmentId, Model model){
-        Department department = departmentDao.getDepartmentById(departmentId);
+        Department department = departmentService.getDepartmentById(departmentId);
         model.addAttribute(department);
 
         return "editDepartment";
@@ -220,7 +194,7 @@ public class AdminController {
             return "editDepartment";
         }
 
-        departmentDao.editDepartment(department);
+        departmentService.editDepartment(department);
 
         return "redirect:/admin/departmentBase";
     }

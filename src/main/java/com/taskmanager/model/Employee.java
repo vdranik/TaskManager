@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -25,21 +26,21 @@ public class Employee implements Serializable {
     @NotEmpty (message = "The employee role must not be null")
     private String employeeRole;
 
-    @ManyToOne
+    @NotNull(message = "The employee department must not be null")
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "departmentId")
     private Department department;
 
     @Transient
     private MultipartFile employeeImage;
 
-    public MultipartFile getEmployeeImage() {
-        return employeeImage;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeImage(MultipartFile employeeImage) {
-        this.employeeImage = employeeImage;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
-
 
     public String getEmployeeName() {
         return employeeName;
@@ -65,19 +66,19 @@ public class Employee implements Serializable {
         this.employeeRole = employeeRole;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
-
     public Department getDepartment() {
         return department;
     }
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public MultipartFile getEmployeeImage() {
+        return employeeImage;
+    }
+
+    public void setEmployeeImage(MultipartFile employeeImage) {
+        this.employeeImage = employeeImage;
     }
 }

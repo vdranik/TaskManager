@@ -26,7 +26,7 @@
                 <tr>
                     <td><img src="<c:url value="/resources/images/${employee.employeeId}.png" />" alt="image" style="width:100%"/></td>
                     <td>${employee.employeeName}</td>
-                    <td>${employee.employeeDepartment.departmentName}</td>
+                    <td>${employee.department.departmentName}</td>
                     <td>${employee.employeePhone}</td>
                     <td>${employee.employeeRole}</td>
                     <td><a href="<spring:url value="/employeeList/viewEmployee/${employee.employeeId}" />"><span class="glyphicon glyphicon-info-sign"></span></a>
