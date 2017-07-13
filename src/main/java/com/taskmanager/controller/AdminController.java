@@ -63,26 +63,23 @@ public class AdminController {
     public String addEmployeePost(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model, HttpServletRequest request){
 
         if(result.hasErrors()){
+            List<Department> departmentList = departmentDao.getAllDepartments();
+            model.addAttribute("departmentList", departmentList);
             return "addEmployee";
         }
 
         MultipartFile employeeImage = employee.getEmployeeImage();
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
-
-        if(employeeImage != null && !employeeImage.isEmpty()){
-            try {
-                employeeImage.transferTo(new File(path.toString()));
-            } catch (Exception ex){
-                ex.printStackTrace();
-                throw new RuntimeException("Employee image saving failed", ex);
-            }
-        }
-
+        initPath(employee, request);
+        checkImage(employeeImage);
 
         employeeDao.addEmployee(employee);
 
         return "redirect:/admin/employeeBase";
+    }
+
+    private void initPath(@Valid @ModelAttribute("employee") Employee employee, HttpServletRequest request) {
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
     }
 
     @RequestMapping("/admin/employeeBase/deleteEmployee/{employeeId}")
@@ -107,7 +104,9 @@ public class AdminController {
     @RequestMapping("/admin/employeeBase/editEmployee/{employeeId}")
     public String editEmployee(@PathVariable("employeeId") int employeeId, Model model){
         Employee employee = employeeDao.getEmployeeById(employeeId);
-        model.addAttribute(employee);
+        List<Department> departmentList = departmentDao.getAllDepartments();
+        model.addAttribute("employee", employee);
+        model.addAttribute("departmentList", departmentList);
 
         return "editEmployee";
     }
@@ -116,13 +115,21 @@ public class AdminController {
     public String editEmployee(@Valid @ModelAttribute("employee") Employee  employee, BindingResult result, Model model, HttpServletRequest request){
 
         if(result.hasErrors()){
+            List<Department> departmentList = departmentDao.getAllDepartments();
+            model.addAttribute("departmentList", departmentList);
             return "editEmployee";
         }
 
         MultipartFile employeeImage = employee.getEmployeeImage();
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        path = Paths.get(rootDirectory + "/WEB-INF/resources/images/" + employee.getEmployeeId() + ".png");
+        initPath(employee, request);
+        checkImage(employeeImage);
 
+        employeeDao.editEmployee(employee);
+
+        return "redirect:/admin/employeeBase";
+    }
+
+    private void checkImage(MultipartFile employeeImage) {
         if(employeeImage != null && !employeeImage.isEmpty()){
             try {
                 employeeImage.transferTo(new File(path.toString()));
@@ -131,10 +138,6 @@ public class AdminController {
                 throw new RuntimeException("Employee image saving failed", ex);
             }
         }
-
-        employeeDao.editEmployee(employee);
-
-        return "redirect:/admin/employeeBase";
     }
 
     //
@@ -150,9 +153,6 @@ public class AdminController {
     @RequestMapping("/admin/departmentBase/addDepartment")
     public String addDepartment(Model model){
         Department department = new Department();
-        department.setDepartmentName("Department");
-        department.setDepartmentDescription("Department desc");
-
         model.addAttribute("department", department);
 
         return "addDepartment";
@@ -165,19 +165,6 @@ public class AdminController {
             return "addDepartment";
         }
 
-//        MultipartFile employeeImage = employee.getEmployeeImage();
-//        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-//        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
-//
-//        if(employeeImage != null && !employeeImage.isEmpty()){
-//            try {
-//                employeeImage.transferTo(new File(path.toString()));
-//            } catch (Exception ex){
-//                ex.printStackTrace();
-//                throw new RuntimeException("Employee image saving failed", ex);
-//            }
-//        }
-
         departmentDao.addDepartment(department);
 
         return "redirect:/admin/departmentBase";
@@ -185,19 +172,6 @@ public class AdminController {
 
     @RequestMapping("/admin/departmentBase/deleteDepartment/{departmentId}")
     public String deleteDepartment(@PathVariable int departmentId, Model model, HttpServletRequest request) {
-
-//        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-//        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employeeId + ".png");
-//
-//        if(Files.exists(path)){
-//            try {
-//                Files.delete(path);
-//            } catch (Exception ex){
-//                ex.printStackTrace();
-//            }
-//        }
-//
-//        employeeDao.deleteEmployee(employeeId);
 
         departmentDao.deleteDepartment(departmentId);
 

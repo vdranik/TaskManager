@@ -20,18 +20,12 @@
                 <form:errors path="employeeName" cssStyle="color:#ff0000;" />
             </div>
 
-
-            <%--<div class="form-group">--%>
-            <%--<label for="department">Department</label>--%>
-            <%--<label class="checkbox-inline"><form:radiobutton path="employeeDepartment" id="department" value="console" />Console</label>--%>
-            <%--<label class="checkbox-inline"><form:radiobutton path="employeeDepartment" id="department value="game" />Game</label>--%>
-            <%--<label class="checkbox-inline"><form:radiobutton path="employeeDepartment" id="department" value="accessory" />Accessory</label>--%>
-            <%--</div>--%>
-
-            <%--<div class="form-group">--%>
-            <%--<label for="description">Description</label>--%>
-            <%--<form:textarea path="productDescription" id="description" class="form-Control" />--%>
-            <%--</div>--%>
+            <div class="form-group">
+                <label for="department">Department: </label>
+                <c:forEach var="department" items="${departmentList}">
+                    <form:radiobutton path="department.departmentId" id="department" value="${department.departmentId}" label="${department.departmentName}" required="required"/>
+                </c:forEach>
+            </div>
 
             <div class="form-group">
                 <label for="phone">Phone</label>

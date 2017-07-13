@@ -17,14 +17,14 @@ public class Department implements Serializable {
     private static final long serialVersionUID = -3532377236419382984L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private int departmentId;
     @NotEmpty(message = "The department name must not be null")
     private String departmentName;
     @NotEmpty(message = "The department description must not be null")
     private String departmentDescription;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE,  fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Employee> employeeList;
 

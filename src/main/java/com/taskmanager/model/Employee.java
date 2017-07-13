@@ -16,7 +16,7 @@ public class Employee implements Serializable {
     private static final long serialVersionUID = -3532377236419382983L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private int employeeId;
     @NotEmpty (message = "The employee name must not be null")
     private String employeeName;
