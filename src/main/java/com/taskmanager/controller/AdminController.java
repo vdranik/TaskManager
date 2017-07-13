@@ -71,21 +71,17 @@ public class AdminController {
         }
 
         MultipartFile employeeImage = employee.getEmployeeImage();
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
-
-        if(employeeImage != null && !employeeImage.isEmpty()){
-            try {
-                employeeImage.transferTo(new File(path.toString()));
-            } catch (Exception ex){
-                ex.printStackTrace();
-                throw new RuntimeException("Employee image saving failed", ex);
-            }
-        }
+        initPath(employee, request);
+        checkImage(employeeImage);
 
         employeeService.addEmployee(employee);
 
         return "redirect:/admin/employeeBase";
+    }
+
+    private void initPath(@Valid @ModelAttribute("employee") Employee employee, HttpServletRequest request) {
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        path = Paths.get(rootDirectory + "\\WEB-INF\\resources\\images\\" + employee.getEmployeeId() + ".png");
     }
 
     @RequestMapping("/admin/employeeBase/deleteEmployee/{employeeId}")
@@ -110,7 +106,9 @@ public class AdminController {
     @RequestMapping("/admin/employeeBase/editEmployee/{employeeId}")
     public String editEmployee(@PathVariable("employeeId") int employeeId, Model model){
         Employee employee = employeeService.getEmployeeById(employeeId);
-        model.addAttribute(employee);
+        List<Department> departmentList = departmentService.getAllDepartments();
+        model.addAttribute("employee", employee);
+        model.addAttribute("departmentList", departmentList);
 
         return "editEmployee";
     }
@@ -119,13 +117,21 @@ public class AdminController {
     public String editEmployee(@Valid @ModelAttribute("employee") Employee  employee, BindingResult result, Model model, HttpServletRequest request){
 
         if(result.hasErrors()){
+            List<Department> departmentList = departmentService.getAllDepartments();
+            model.addAttribute("departmentList", departmentList);
             return "editEmployee";
         }
 
         MultipartFile employeeImage = employee.getEmployeeImage();
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        path = Paths.get(rootDirectory + "/WEB-INF/resources/images/" + employee.getEmployeeId() + ".png");
+        initPath(employee, request);
+        checkImage(employeeImage);
 
+        employeeService.editEmployee(employee);
+
+        return "redirect:/admin/employeeBase";
+    }
+
+    private void checkImage(MultipartFile employeeImage) {
         if(employeeImage != null && !employeeImage.isEmpty()){
             try {
                 employeeImage.transferTo(new File(path.toString()));
@@ -134,10 +140,6 @@ public class AdminController {
                 throw new RuntimeException("Employee image saving failed", ex);
             }
         }
-
-        employeeService.editEmployee(employee);
-
-        return "redirect:/admin/employeeBase";
     }
 
     //
@@ -153,7 +155,6 @@ public class AdminController {
     @RequestMapping("/admin/departmentBase/addDepartment")
     public String addDepartment(Model model){
         Department department = new Department();
-
         model.addAttribute("department", department);
 
         return "addDepartment";

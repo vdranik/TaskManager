@@ -10,7 +10,10 @@
             <p class="lead">Fill the below  information to add an employee</p>
         </div>
 
+
+        <%--todo add department check--%>
         <form:form action="${pageContext.request.contextPath}/admin/employeeBase/addEmployee" method="post" commandName="employee" enctype="multipart/form-data">
+
             <div class="form-group">
                 <label for="name">Name</label>
                 <form:input path="employeeName" id="name" class="form-Control" />
@@ -21,7 +24,6 @@
                <label for="department">Department: </label>
                 <c:forEach var="department" items="${departmentList}">
                     <form:radiobutton path="department.departmentId" id="department" value="${department.departmentId}" label="${department.departmentName}" required="required"/>
-                    <form:errors path="department" cssStyle="color:#ff0000;" />
                 </c:forEach>
             </div>
 

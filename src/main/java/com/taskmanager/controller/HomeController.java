@@ -1,6 +1,5 @@
 package com.taskmanager.controller;
 
-import com.taskmanager.dao.DepartmentDao;
 import com.taskmanager.model.Department;
 import com.taskmanager.model.Employee;
 import com.taskmanager.service.DepartmentService;

@@ -17,7 +17,7 @@ public class Employee implements Serializable {
     private static final long serialVersionUID = -3532377236419382983L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private int employeeId;
     @NotEmpty (message = "The employee name must not be null")
     private String employeeName;
@@ -27,7 +27,7 @@ public class Employee implements Serializable {
     private String employeeRole;
 
     @NotNull(message = "The employee department must not be null")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "departmentId")
     private Department department;
 

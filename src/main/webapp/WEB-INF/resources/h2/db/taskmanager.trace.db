@@ -1,6 +1,7 @@
-2017-07-09 21:10:52 jdbc[3]: exception
+2017-07-13 10:49:57 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Table "USERS" not found; SQL statement:
 SELECT username, password, enabled FROM users WHERE username = ? [42102-195]
+<<<<<<< HEAD
 2017-07-09 21:10:54 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Table "USERS" not found; SQL statement:
 SELECT username, password, enabled FROM users WHERE username = ? [42102-195]
@@ -932,3 +933,8 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:D:/Projects/
 	at org.h2.mvstore.FileStore.open(FileStore.java:173)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:347)
 	... 108 more
+=======
+2017-07-13 14:24:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "DEPARTMANT" not found; SQL statement:
+DROP TABLE DEPARTMANT [42102-195]
+>>>>>>> master

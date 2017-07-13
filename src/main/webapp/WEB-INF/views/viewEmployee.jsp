@@ -18,7 +18,7 @@
 
                 <div class="col-md-4">
                     <h3>${employee.employeeName}</h3>
-                    <p><strong>Department</strong>: ${employee.employeeDepartment.departmentName}</p>
+                    <p><strong>Department</strong>: ${employee.department.departmentName}</p>
                     <p><strong>Phone</strong>: ${employee.employeePhone}</p>
                     <p><strong>Role</strong>: ${employee.employeeRole}</p>
                 </div>
